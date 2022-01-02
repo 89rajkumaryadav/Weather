@@ -11,12 +11,12 @@ import SwiftUI
 
 
 struct DetailView:View{
-  
+    
     
     
     
     var body: some View{
-       
+        
         GeometryReader{ geometry in
             
             VStack{
@@ -32,7 +32,7 @@ struct DetailView:View{
         }
     }
     
-   
+    
     var HorizantalDateWeekList: some View{
         
         ScrollView(.horizontal){
@@ -81,15 +81,15 @@ struct DetailView:View{
     }
     
     
-/*    var verticalListOfContent{
-        
-        LazyVStack{
-            
-           ForEach
-            
-        }
-        
-    }*/
+    /*    var verticalListOfContent{
+     
+     LazyVStack{
+     
+     ForEach
+     
+     }
+     
+     }*/
     
     
 }

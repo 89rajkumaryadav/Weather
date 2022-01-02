@@ -8,6 +8,10 @@
 import SwiftUI
 
 struct HomeView: View {
+    
+    @EnvironmentObject var homeVM:HomeVM
+    
+    
     var body: some View {
         
         NavigationView {
@@ -31,6 +35,8 @@ struct HomeView: View {
                
                 
             }.frame(minWidth: 0, idealWidth: 0, maxWidth: .infinity, minHeight: 0, idealHeight: 0, maxHeight: .infinity, alignment: .center)
+        }.onAppear {
+            homeVM.getWeatherData()
         }
        
     }
@@ -42,13 +48,13 @@ struct HomeView: View {
     var clearSkygroup: some View{
         
         HStack{
-          Image(systemName: "circle.fill")
-                .resizable()
+            AsyncImage(url: URL(string: "https://openweathermap.org/img/w/\(homeVM.weatherIcon).png"))
                 .frame(width: 40, height: 40, alignment: .leading)
-                .foregroundColor(Color.gray)
+                .padding()
+               
             VStack(alignment:.leading ){
-                Text("Clear sky")
-                Text("Light air")
+                Text(homeVM.mainWather)
+                Text(homeVM.weatherDes)
                     .foregroundColor(.gray)
                     .font(.footnote)
                     .fontWeight(.light)
@@ -61,10 +67,10 @@ struct HomeView: View {
     var txtLargeTempGroup: some View {
         
         VStack{
-            Text("20°C")
+            Text(homeVM.weTemprature)
                 .font(Font.system(size: 90))
             
-            Text("Feels like 19 °C")
+            Text(homeVM.feelsLike)
                 .font(.footnote)
                 .foregroundColor(.gray)
             
@@ -86,31 +92,31 @@ struct HomeView: View {
             
             HStack{
                 HStack(spacing:2){
-                Text("Wind: 1.1m/s NNW")
+                    Text(homeVM.wind)
                         .font(Font.system(size: 12))
                         .fontWeight(.bold)
                 Image(systemName: "location.fill")
                     .resizable()
                     .frame(width: 10, height: 10, alignment: .center)
             }
-             Text("Humidity: 41%")
+                Text(homeVM.humidity)
                     .font(Font.system(size: 12))
                     .fontWeight(.bold)
             
-            Text("UV index: 0.0")
+                Text(homeVM.UVIndex)
                     .font(Font.system(size: 12))
                     .fontWeight(.bold)
             
             }
             
             HStack{
-            Text("Pressure: 1014hPa")
+                Text(homeVM.pressure)
                     .font(Font.system(size: 12))
                     .fontWeight(.bold)
-            Text("Visibility: 10.0km")
+                Text(homeVM.visibility)
                     .font(Font.system(size: 12))
                     .fontWeight(.bold)
-            Text("Dew point: 8°c")
+                Text(homeVM.dewPoint)
                     .font(Font.system(size: 12))
                     .fontWeight(.bold)
                 
@@ -132,9 +138,13 @@ struct HomeView: View {
         
         ScrollView(.horizontal){
             LazyHStack(spacing:10){
-                ForEach(0..<20) { index in
-                    CellTimeImageTemp()
+              
+                if (homeVM.hourleyList != nil){
+                ForEach(homeVM.hourleyList!) { item in
+                    CellTimeImageTemp(item: item)
                 }
+                }
+              
                 
             }
         }
@@ -167,10 +177,12 @@ struct HomeView: View {
 //MARK: Time Temp Weather Cell Design
 
 struct CellTimeImageTemp:View{
+    
+    let item:HourlyVM
     var body: some View{
         
         VStack(spacing:8){
-            Text("11am")
+            Text(item.Time)
                
             Image(systemName: "cloud.moon")
                 
@@ -204,8 +216,11 @@ struct CellOfDayDateTemCloud: View{
 
 
 struct HomeView_Previews: PreviewProvider {
+    
+    
     static var previews: some View {
-        HomeView()
+       
+        HomeView().environmentObject(HomeVM())
     }
 }
 
